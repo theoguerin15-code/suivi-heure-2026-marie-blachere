@@ -5,570 +5,161 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Mes Heures — Théo</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
-
   :root {
-    --bg: #0f0e0d;
-    --card: #1a1917;
-    --card2: #222120;
-    --border: #2e2c2a;
-    --accent: #e8a03e;
-    --accent2: #c97b1e;
-    --text: #f0ede8;
-    --muted: #8a857e;
-    --green: #4caf7d;
-    --red: #e05c5c;
-    --blue: #5b9bd5;
-    --purple: #a07dd5;
+    --bg: #0f0e0d; --card: #1a1917; --card2: #222120; --border: #2e2c2a;
+    --accent: #e8a03e; --accent2: #c97b1e; --text: #f0ede8; --muted: #8a857e;
+    --green: #4caf7d; --red: #e05c5c; --blue: #5b9bd5; --purple: #a07dd5;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    padding-bottom: 100px;
-  }
-
-  header {
-    background: linear-gradient(135deg, #1a1409 0%, #1a1917 100%);
-    border-bottom: 1px solid var(--border);
-    padding: 20px 16px 16px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-
-  header h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: 20px;
-    font-weight: 800;
-    color: var(--accent);
-    letter-spacing: -0.5px;
-  }
-
-  header p {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 2px;
-  }
-
-  .tabs {
-    display: flex;
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; min-height: 100vh; padding-bottom: 100px; }
+  header { background: linear-gradient(135deg,#1a1409,#1a1917); border-bottom: 1px solid var(--border); padding: 20px 16px 16px; position: sticky; top: 0; z-index: 100; }
+  header h1 { font-size: 20px; font-weight: 800; color: var(--accent); }
+  header p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
   .tabs::-webkit-scrollbar { display: none; }
-
-  .tab {
-    flex: 1;
-    min-width: 80px;
-    padding: 14px 8px;
-    text-align: center;
-    font-family: 'Syne', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--muted);
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: all 0.2s;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-  .tab.active {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-  }
-
+  .tab { flex: 1; min-width: 80px; padding: 13px 8px; text-align: center; font-size: 11px; font-weight: 700; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; background: none; border: none; border-bottom: 2px solid transparent; }
+  .tab.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
   .page { display: none; padding: 16px; }
   .page.active { display: block; }
-
-  /* ─── CARDS ─── */
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 16px;
-    margin-bottom: 12px;
-  }
-
-  .card-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 12px;
-  }
-
-  /* ─── FORM ─── */
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  label {
-    font-size: 11px;
-    color: var(--muted);
-    font-weight: 500;
-    letter-spacing: 0.3px;
-  }
-
-  input, select {
-    background: var(--card2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    padding: 10px 12px;
-    outline: none;
-    transition: border-color 0.2s;
-    width: 100%;
-    -webkit-appearance: none;
-  }
-  input:focus, select:focus { border-color: var(--accent); }
-
-  .toggles {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 10px;
-  }
-
-  .toggle-btn {
-    padding: 8px 14px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: var(--card2);
-    color: var(--muted);
-    font-size: 12px;
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-weight: 500;
-  }
-  .toggle-btn.on {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #1a1009;
-    font-weight: 700;
-  }
-
-  .btn-primary {
-    width: 100%;
-    padding: 14px;
-    background: var(--accent);
-    color: #1a1009;
-    border: none;
-    border-radius: 12px;
-    font-family: 'Syne', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 0.5px;
-    transition: background 0.2s;
-    margin-top: 4px;
-  }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+  .card-title { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  label { font-size: 11px; color: var(--muted); font-weight: 500; }
+  input, select { background: var(--card2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: system-ui, sans-serif; font-size: 14px; padding: 10px 12px; outline: none; width: 100%; -webkit-appearance: none; }
+  input:focus { border-color: var(--accent); }
+  .toggles { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+  .toggle-btn { padding: 8px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--card2); color: var(--muted); font-size: 12px; cursor: pointer; font-weight: 500; }
+  .toggle-btn.on { background: var(--accent); border-color: var(--accent); color: #1a1009; font-weight: 700; }
+  .btn-primary { width: 100%; padding: 14px; background: var(--accent); color: #1a1009; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 4px; }
   .btn-primary:active { background: var(--accent2); }
-
-  /* ─── PREVIEW BOX ─── */
-  .preview-box {
-    background: var(--card2);
-    border: 1px dashed var(--border);
-    border-radius: 10px;
-    padding: 12px;
-    margin: 10px 0;
-  }
-  .preview-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px 0;
-    font-size: 13px;
-  }
-  .preview-row span:first-child { color: var(--muted); }
-  .preview-row .val { font-weight: 600; }
-  .preview-row .val.green { color: var(--green); }
-  .preview-row .val.accent { color: var(--accent); font-size: 15px; }
-
-  /* ─── HISTORIQUE ─── */
-  .entry-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 14px;
-    margin-bottom: 10px;
-    position: relative;
-  }
-
-  .entry-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 8px;
-  }
-
-  .entry-date {
-    font-family: 'Syne', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--text);
-  }
-
-  .entry-total {
-    font-family: 'Syne', sans-serif;
-    font-size: 15px;
-    font-weight: 800;
-    color: var(--green);
-  }
-
-  .entry-details {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
-  .badge {
-    background: var(--card2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 3px 8px;
-    font-size: 11px;
-    color: var(--muted);
-  }
-  .badge.dim { color: var(--blue); border-color: #2a3d52; background: #1a2838; }
-  .badge.nuit { color: var(--purple); border-color: #352a52; background: #231838; }
-  .badge.ferie { color: #e0995c; border-color: #523a2a; background: #382218; }
-  .badge.sup { color: var(--green); border-color: #2a4038; background: #182820; }
-
-  .del-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    color: var(--muted);
-    cursor: pointer;
-    font-size: 16px;
-    padding: 4px;
-    line-height: 1;
-  }
-  .del-btn:active { color: var(--red); }
-
-  .empty-state {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--muted);
-  }
-  .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
-  .empty-state p { font-size: 14px; }
-
-  /* ─── RÉCAP MOIS ─── */
-  .recap-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-
-  .stat-card {
-    background: var(--card2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 14px;
-    text-align: center;
-  }
-  .stat-card .stat-val {
-    font-family: 'Syne', sans-serif;
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--accent);
-    display: block;
-  }
-  .stat-card .stat-val.green { color: var(--green); }
-  .stat-card .stat-label {
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 4px;
-    display: block;
-  }
-
-  .breakdown-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 13px;
-  }
-  .breakdown-row:last-child { border-bottom: none; }
-  .breakdown-row .label { color: var(--muted); }
-  .breakdown-row .amount { font-weight: 600; color: var(--text); }
-  .breakdown-row .amount.accent { color: var(--accent); font-size: 15px; font-family: 'Syne', sans-serif; font-weight: 800; }
-
-  .month-selector {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-  }
-  .month-selector button {
-    background: var(--card);
-    border: 1px solid var(--border);
-    color: var(--text);
-    border-radius: 10px;
-    padding: 8px 14px;
-    cursor: pointer;
-    font-size: 18px;
-    line-height: 1;
-  }
-  .month-selector .month-label {
-    font-family: 'Syne', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text);
-  }
-
-  /* ─── PARAMÈTRES ─── */
-  .param-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 13px;
-  }
+  .preview-box { background: var(--card2); border: 1px dashed var(--border); border-radius: 10px; padding: 12px; margin: 10px 0; }
+  .p-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+  .p-row span:first-child { color: var(--muted); }
+  .nuit-info { background: #231838; border: 1px solid #352a52; border-radius: 8px; padding: 8px 10px; font-size: 11px; color: var(--purple); margin-bottom: 10px; line-height: 1.5; }
+  .entry-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 10px; position: relative; }
+  .entry-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 6px; }
+  .badge { border-radius: 8px; padding: 3px 8px; font-size: 11px; }
+  .badge-default { background: var(--card2); border: 1px solid var(--border); color: var(--muted); }
+  .badge-dim { background: #1a2838; border: 1px solid #2a3d5233; color: var(--blue); }
+  .badge-ferie { background: #382218; border: 1px solid #52382a33; color: #e0995c; }
+  .badge-nuit { background: #231838; border: 1px solid #352a5233; color: var(--purple); }
+  .del-btn { position: absolute; top: 10px; right: 10px; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; padding: 4px; }
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); }
+  .recap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .stat-card { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; }
+  .month-selector { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .month-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 8px 16px; cursor: pointer; font-size: 18px; }
+  .b-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .b-row:last-child { border-bottom: none; }
+  .net-note { background: #1a2838; border: 1px solid #2a3d52; border-radius: 10px; padding: 10px 12px; font-size: 12px; color: var(--blue); margin-top: 12px; line-height: 1.6; }
+  .param-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
   .param-row:last-child { border-bottom: none; }
-  .param-row .param-label { color: var(--muted); font-size: 12px; }
-  .param-row input {
-    width: 100px;
-    text-align: right;
-    background: var(--card2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 6px 10px;
-    color: var(--accent);
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-  }
-
-  .net-note {
-    background: #1a2838;
-    border: 1px solid #2a3d52;
-    border-radius: 10px;
-    padding: 10px 12px;
-    font-size: 12px;
-    color: var(--blue);
-    margin-top: 12px;
-    line-height: 1.6;
-  }
-
-  .section-sep {
-    height: 1px;
-    background: var(--border);
-    margin: 16px 0;
-  }
+  .param-input { width: 90px; text-align: right; background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; color: var(--accent); font-size: 14px; font-weight: 700; }
+  .sep { height: 1px; background: var(--border); margin: 6px 0; }
 </style>
 </head>
 <body>
 
 <header>
   <h1>🍞 Mes Heures</h1>
-  <p id="header-sub">Marie Blachère — Boulanger</p>
+  <p>Marie Blachère — Boulanger</p>
 </header>
 
 <div class="tabs">
-  <div class="tab active" onclick="showPage('ajouter')">Ajouter</div>
-  <div class="tab" onclick="showPage('historique')">Historique</div>
-  <div class="tab" onclick="showPage('recap')">Récap mois</div>
-  <div class="tab" onclick="showPage('params')">Paramètres</div>
+  <button class="tab active" onclick="showPage('ajouter',this)">Ajouter</button>
+  <button class="tab" onclick="showPage('historique',this)">Historique</button>
+  <button class="tab" onclick="showPage('recap',this)">Récap</button>
+  <button class="tab" onclick="showPage('params',this)">Réglages</button>
 </div>
 
-<!-- ─────────────── PAGE AJOUTER ─────────────── -->
+<!-- AJOUTER -->
 <div class="page active" id="page-ajouter">
-
   <div class="card">
     <div class="card-title">Nouvelle journée</div>
-
     <div class="form-row">
-      <div class="form-group">
-        <label>Date</label>
-        <input type="date" id="inp-date">
-      </div>
-      <div class="form-group">
-        <label>Heure début</label>
-        <input type="time" id="inp-debut">
-      </div>
+      <div class="form-group"><label>Date</label><input type="date" id="inp-date"></div>
+      <div class="form-group"><label>Heure début</label><input type="time" id="inp-debut" oninput="renderPreview()"></div>
     </div>
     <div class="form-row">
-      <div class="form-group">
-        <label>Heure fin</label>
-        <input type="time" id="inp-fin">
-      </div>
-      <div class="form-group">
-        <label>Pause (min)</label>
-        <input type="number" id="inp-pause" value="30" min="0" max="120">
-      </div>
+      <div class="form-group"><label>Heure fin</label><input type="time" id="inp-fin" oninput="renderPreview()"></div>
+      <div class="form-group"><label>Pause (min)</label><input type="number" id="inp-pause" value="30" min="0" oninput="renderPreview()"></div>
     </div>
-
-    <label style="margin-bottom:8px; display:block;">Majorations applicables</label>
+    <label style="display:block;margin-bottom:8px;">Majorations manuelles</label>
     <div class="toggles">
       <button class="toggle-btn" id="tog-dim" onclick="toggleMaj('dim')">Dimanche +50%</button>
       <button class="toggle-btn" id="tog-ferie" onclick="toggleMaj('ferie')">Férié +50%</button>
-      <button class="toggle-btn" id="tog-nuit" onclick="toggleMaj('nuit')">Nuit +25%</button>
     </div>
+    <div class="nuit-info">🌙 La majoration nuit (21h→6h) est calculée <strong>automatiquement</strong> selon tes horaires.</div>
   </div>
 
-  <div class="card" id="preview-card" style="display:none;">
+  <div class="card" id="preview-card" style="display:none">
     <div class="card-title">Aperçu de la journée</div>
     <div class="preview-box" id="preview-content"></div>
   </div>
 
-  <button class="btn-primary" onclick="ajouterJournee()">+ Enregistrer cette journée</button>
+  <button class="btn-primary" id="btn-save" onclick="ajouterJournee()">+ Enregistrer cette journée</button>
 </div>
 
-<!-- ─────────────── PAGE HISTORIQUE ─────────────── -->
+<!-- HISTORIQUE -->
 <div class="page" id="page-historique">
   <div id="histo-list"></div>
 </div>
 
-<!-- ─────────────── PAGE RÉCAP ─────────────── -->
+<!-- RECAP -->
 <div class="page" id="page-recap">
-
   <div class="month-selector">
-    <button onclick="changeMonth(-1)">‹</button>
-    <span class="month-label" id="recap-month-label">Mai 2026</span>
-    <button onclick="changeMonth(1)">›</button>
+    <button class="month-btn" onclick="changeMonth(-1)">‹</button>
+    <span id="recap-month-label" style="font-weight:700;font-size:16px;"></span>
+    <button class="month-btn" onclick="changeMonth(1)">›</button>
   </div>
-
   <div class="recap-grid" id="recap-stats"></div>
-
-  <div class="card">
-    <div class="card-title">Détail du calcul brut</div>
-    <div id="recap-breakdown"></div>
-  </div>
-
-  <div class="net-note">
-    💡 Le salaire net est environ <strong>78–80%</strong> du brut (cotisations ~21%). Estimation net : <span id="est-net">—</span>
-  </div>
+  <div class="card"><div class="card-title">Détail du calcul brut</div><div id="recap-breakdown"></div></div>
+  <div class="net-note">💡 Net ≈ 79% du brut. Estimation : <strong id="est-net">—</strong></div>
 </div>
 
-<!-- ─────────────── PAGE PARAMS ─────────────── -->
+<!-- PARAMS -->
 <div class="page" id="page-params">
-
   <div class="card">
     <div class="card-title">Mon contrat</div>
-
-    <div class="param-row">
-      <div>
-        <div style="font-size:13px;">Taux horaire brut</div>
-        <div class="param-label">Base contrat : 12,34 €/h</div>
-      </div>
-      <input type="number" id="p-taux" value="12.34" step="0.01" oninput="saveParams()">
-    </div>
-
-    <div class="param-row">
-      <div>
-        <div style="font-size:13px;">Heures / semaine</div>
-        <div class="param-label">Contrat 35h</div>
-      </div>
-      <input type="number" id="p-hebdo" value="35" step="0.5" oninput="saveParams()">
-    </div>
-
-    <div class="param-row">
-      <div>
-        <div style="font-size:13px;">Majoration dimanche</div>
-        <div class="param-label">% en plus du taux de base</div>
-      </div>
-      <input type="number" id="p-dim" value="50" step="5" oninput="saveParams()">
-    </div>
-
-    <div class="param-row">
-      <div>
-        <div style="font-size:13px;">Majoration férié</div>
-        <div class="param-label">% en plus du taux de base</div>
-      </div>
-      <input type="number" id="p-ferie" value="50" step="5" oninput="saveParams()">
-    </div>
-
-    <div class="param-row">
-      <div>
-        <div style="font-size:13px;">Majoration nuit</div>
-        <div class="param-label">% en plus du taux de base</div>
-      </div>
-      <input type="number" id="p-nuit" value="25" step="5" oninput="saveParams()">
-    </div>
-
-    <div class="param-row">
-      <div>
-        <div style="font-size:13px;">Heures sup (> 35h/sem)</div>
-        <div class="param-label">% en plus du taux de base</div>
-      </div>
-      <input type="number" id="p-sup" value="25" step="5" oninput="saveParams()">
-    </div>
+    <div class="param-row"><div><div>Taux horaire brut (€/h)</div><div style="font-size:11px;color:var(--muted)">Base contrat : 12,34 €</div></div><input class="param-input" type="number" id="p-taux" value="12.34" step="0.01" oninput="saveParams()"></div>
+    <div class="param-row"><div><div>Heures / semaine</div><div style="font-size:11px;color:var(--muted)">Contrat 35h</div></div><input class="param-input" type="number" id="p-hebdo" value="35" step="0.5" oninput="saveParams()"></div>
+    <div class="param-row"><div><div>Majoration dimanche (%)</div></div><input class="param-input" type="number" id="p-dim" value="50" step="5" oninput="saveParams()"></div>
+    <div class="param-row"><div><div>Majoration férié (%)</div></div><input class="param-input" type="number" id="p-ferie" value="50" step="5" oninput="saveParams()"></div>
+    <div class="param-row"><div><div>Majoration nuit (%)</div><div style="font-size:11px;color:var(--muted)">Heures entre 21h et 6h</div></div><input class="param-input" type="number" id="p-nuit" value="25" step="5" oninput="saveParams()"></div>
+    <div class="param-row"><div><div>Heures sup (%)</div></div><input class="param-input" type="number" id="p-sup" value="25" step="5" oninput="saveParams()"></div>
   </div>
-
   <div class="card">
     <div class="card-title">Danger zone</div>
-    <button class="btn-primary" style="background:#e05c5c; margin-top:0;" onclick="resetData()">
-      🗑 Effacer toutes les données
-    </button>
+    <button class="btn-primary" style="background:var(--red);margin-top:0" onclick="resetData()">🗑 Effacer toutes les données</button>
   </div>
 </div>
 
 <script>
-// ─── STATE ───
-let entries = JSON.parse(localStorage.getItem('theo_entries') || '[]');
-let params = JSON.parse(localStorage.getItem('theo_params') || 'null') || {
-  taux: 12.34, hebdo: 35, dim: 50, ferie: 50, nuit: 25, sup: 25
-};
-
-let majOn = { dim: false, ferie: false, nuit: false };
+const MOIS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+let entries = JSON.parse(localStorage.getItem('theo_v2_entries') || '[]');
+let params = JSON.parse(localStorage.getItem('theo_v2_params') || 'null') || { taux:12.34, hebdo:35, dim:50, ferie:50, nuit:25, sup:25 };
+let majOn = { dim:false, ferie:false };
 let recapMonth = new Date().getMonth();
 let recapYear = new Date().getFullYear();
 
-// ─── INIT ───
 window.onload = () => {
-  const today = new Date();
-  document.getElementById('inp-date').value = today.toISOString().slice(0, 10);
+  document.getElementById('inp-date').value = new Date().toISOString().slice(0,10);
   loadParams();
-  renderPreview();
   renderHistorique();
   renderRecap();
-
-  // Live preview
-  ['inp-debut', 'inp-fin', 'inp-pause'].forEach(id =>
-    document.getElementById(id).addEventListener('input', renderPreview)
-  );
 };
 
-// ─── NAV ───
-function showPage(p) {
+function showPage(p, btn) {
   document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
   document.getElementById('page-' + p).classList.add('active');
-  event.target.classList.add('active');
+  btn.classList.add('active');
   if (p === 'recap') renderRecap();
   if (p === 'historique') renderHistorique();
 }
 
-// ─── PARAMS ───
 function loadParams() {
   document.getElementById('p-taux').value = params.taux;
   document.getElementById('p-hebdo').value = params.hebdo;
@@ -580,244 +171,195 @@ function loadParams() {
 
 function saveParams() {
   params = {
-    taux: parseFloat(document.getElementById('p-taux').value) || 12.34,
-    hebdo: parseFloat(document.getElementById('p-hebdo').value) || 35,
-    dim: parseFloat(document.getElementById('p-dim').value) || 50,
-    ferie: parseFloat(document.getElementById('p-ferie').value) || 50,
-    nuit: parseFloat(document.getElementById('p-nuit').value) || 25,
-    sup: parseFloat(document.getElementById('p-sup').value) || 25,
+    taux: parseFloat(document.getElementById('p-taux').value)||12.34,
+    hebdo: parseFloat(document.getElementById('p-hebdo').value)||35,
+    dim: parseFloat(document.getElementById('p-dim').value)||50,
+    ferie: parseFloat(document.getElementById('p-ferie').value)||50,
+    nuit: parseFloat(document.getElementById('p-nuit').value)||25,
+    sup: parseFloat(document.getElementById('p-sup').value)||25,
   };
-  localStorage.setItem('theo_params', JSON.stringify(params));
+  localStorage.setItem('theo_v2_params', JSON.stringify(params));
 }
 
-// ─── MAJORATIONS ───
 function toggleMaj(key) {
   majOn[key] = !majOn[key];
   document.getElementById('tog-' + key).classList.toggle('on', majOn[key]);
   renderPreview();
 }
 
-// ─── CALCUL JOURNÉE ───
-function calcJournee(debut, fin, pauseMin, maj) {
-  const [dh, dm] = debut.split(':').map(Number);
-  const [fh, fm] = fin.split(':').map(Number);
-  let totalMin = (fh * 60 + fm) - (dh * 60 + dm);
-  if (totalMin <= 0) totalMin += 24 * 60; // nuit dépasse minuit
-  const netMin = Math.max(0, totalMin - (pauseMin || 0));
-  const heures = netMin / 60;
+// ── CALCUL NUIT AUTOMATIQUE ──
+// Retourne les minutes entre 21h et 6h dans un créneau debut→fin
+function calcMinutesNuit(debutStr, finStr) {
+  const toMin = s => { const [h,m] = s.split(':').map(Number); return h*60+m; };
+  let d = toMin(debutStr);
+  let f = toMin(finStr);
+  if (f <= d) f += 24*60; // passe minuit
 
-  let taux = params.taux;
-  let majLabel = [];
-  if (maj.dim) { taux *= (1 + params.dim / 100); majLabel.push(`+${params.dim}% dim`); }
-  if (maj.ferie) { taux *= (1 + params.ferie / 100); majLabel.push(`+${params.ferie}% férié`); }
-  if (maj.nuit) { taux *= (1 + params.nuit / 100); majLabel.push(`+${params.nuit}% nuit`); }
-
-  const brut = heures * taux;
-  return { heures, taux, brut, majLabel };
+  let nuit = 0;
+  // Plage nuit : 0→360 (0h→6h) et 1260→1440 (21h→24h)
+  // On normalise sur 24h glissant
+  for (let t = d; t < f; t++) {
+    const h = t % (24*60);
+    if (h < 360 || h >= 1260) nuit++;
+  }
+  return nuit;
 }
 
-// ─── PREVIEW ───
+function calcJournee(debutStr, finStr, pauseMin, maj) {
+  const toMin = s => { const [h,m] = s.split(':').map(Number); return h*60+m; };
+  let d = toMin(debutStr), f = toMin(finStr);
+  if (f <= d) f += 24*60;
+  const totalMin = Math.max(0, (f - d) - pauseMin);
+  const heures = totalMin / 60;
+
+  const hNuit = calcMinutesNuit(debutStr, finStr) / 60;
+  const hNormales = Math.max(0, heures - hNuit);
+
+  let brut = hNormales * params.taux;
+  // Heures de nuit : taux de base + majoration nuit
+  brut += hNuit * params.taux * (1 + params.nuit/100);
+  // Majoration dimanche ou férié sur toutes les heures
+  if (maj.dim) brut += heures * params.taux * (params.dim/100);
+  if (maj.ferie) brut += heures * params.taux * (params.ferie/100);
+
+  return { heures, hNuit, hNormales, brut, maj:{...maj} };
+}
+
 function renderPreview() {
   const debut = document.getElementById('inp-debut').value;
   const fin = document.getElementById('inp-fin').value;
-  const pause = parseInt(document.getElementById('inp-pause').value) || 0;
-  if (!debut || !fin) { document.getElementById('preview-card').style.display = 'none'; return; }
+  const pause = parseInt(document.getElementById('inp-pause').value)||0;
+  if (!debut || !fin) { document.getElementById('preview-card').style.display='none'; return; }
 
   const r = calcJournee(debut, fin, pause, majOn);
   document.getElementById('preview-card').style.display = 'block';
 
-  const majStr = r.majLabel.length ? r.majLabel.join(', ') : 'Aucune';
-  document.getElementById('preview-content').innerHTML = `
-    <div class="preview-row"><span>Heures travaillées</span><span class="val">${r.heures.toFixed(2)}h</span></div>
-    <div class="preview-row"><span>Taux appliqué</span><span class="val">${r.taux.toFixed(2)} €/h</span></div>
-    <div class="preview-row"><span>Majorations</span><span class="val">${majStr}</span></div>
-    <div class="preview-row" style="margin-top:6px; padding-top:10px; border-top:1px solid var(--border)">
-      <span style="font-weight:600;">Brut estimé</span>
-      <span class="val accent">${r.brut.toFixed(2)} €</span>
-    </div>
-  `;
+  let html = `
+    <div class="p-row"><span>Total heures travaillées</span><span style="font-weight:600">${r.heures.toFixed(2)}h</span></div>
+    <div class="p-row"><span>dont heures normales</span><span style="font-weight:600">${r.hNormales.toFixed(2)}h</span></div>
+    <div class="p-row"><span>dont heures de nuit (21h-6h)</span><span style="font-weight:600;color:var(--purple)">${r.hNuit.toFixed(2)}h</span></div>`;
+  if (majOn.dim) html += `<div class="p-row"><span>Dimanche +${params.dim}%</span><span style="color:var(--blue)">✓</span></div>`;
+  if (majOn.ferie) html += `<div class="p-row"><span>Férié +${params.ferie}%</span><span style="color:#e0995c">✓</span></div>`;
+  html += `<div class="sep"></div><div class="p-row"><span style="font-weight:600">Brut estimé</span><span style="color:var(--accent);font-weight:800;font-size:16px">${r.brut.toFixed(2)} €</span></div>`;
+  document.getElementById('preview-content').innerHTML = html;
 }
 
-// ─── AJOUTER ───
 function ajouterJournee() {
   const date = document.getElementById('inp-date').value;
   const debut = document.getElementById('inp-debut').value;
   const fin = document.getElementById('inp-fin').value;
-  const pause = parseInt(document.getElementById('inp-pause').value) || 0;
-
-  if (!date || !debut || !fin) { alert('Remplis la date, début et fin !'); return; }
+  const pause = parseInt(document.getElementById('inp-pause').value)||0;
+  if (!date||!debut||!fin) { alert('Remplis la date, début et fin !'); return; }
 
   const r = calcJournee(debut, fin, pause, majOn);
+  entries.push({ id:Date.now(), date, debut, fin, pause, maj:r.maj, heures:r.heures, hNuit:r.hNuit, brut:r.brut });
+  localStorage.setItem('theo_v2_entries', JSON.stringify(entries));
 
-  entries.push({
-    id: Date.now(),
-    date, debut, fin, pause,
-    maj: { ...majOn },
-    heures: r.heures,
-    taux: r.taux,
-    brut: r.brut,
-  });
-
-  localStorage.setItem('theo_entries', JSON.stringify(entries));
-
-  // Reset
-  majOn = { dim: false, ferie: false, nuit: false };
-  ['dim', 'ferie', 'nuit'].forEach(k => document.getElementById('tog-' + k).classList.remove('on'));
+  majOn = { dim:false, ferie:false };
+  document.getElementById('tog-dim').classList.remove('on');
+  document.getElementById('tog-ferie').classList.remove('on');
   document.getElementById('inp-debut').value = '';
   document.getElementById('inp-fin').value = '';
   document.getElementById('inp-pause').value = '30';
   document.getElementById('preview-card').style.display = 'none';
 
-  // Set tomorrow
-  const d = new Date(date);
-  d.setDate(d.getDate() + 1);
-  document.getElementById('inp-date').value = d.toISOString().slice(0, 10);
+  const d = new Date(date); d.setDate(d.getDate()+1);
+  document.getElementById('inp-date').value = d.toISOString().slice(0,10);
 
-  // Feedback
-  const btn = document.querySelector('#page-ajouter .btn-primary');
+  const btn = document.getElementById('btn-save');
   btn.textContent = '✅ Enregistré !';
-  setTimeout(() => { btn.textContent = '+ Enregistrer cette journée'; }, 1500);
+  btn.style.background = 'var(--green)';
+  setTimeout(() => { btn.textContent = '+ Enregistrer cette journée'; btn.style.background = 'var(--accent)'; }, 1800);
 }
 
-// ─── HISTORIQUE ───
 function renderHistorique() {
   const list = document.getElementById('histo-list');
-  if (entries.length === 0) {
-    list.innerHTML = `<div class="empty-state"><div class="icon">📋</div><p>Pas encore de journées enregistrées.<br>Ajoute ta première journée !</p></div>`;
+  if (!entries.length) {
+    list.innerHTML = '<div class="empty-state"><div style="font-size:40px;margin-bottom:12px">📋</div><p>Pas encore de journées enregistrées.</p></div>';
     return;
   }
-
-  const sorted = [...entries].sort((a, b) => b.date.localeCompare(a.date));
+  const sorted = [...entries].sort((a,b) => b.date.localeCompare(a.date));
   list.innerHTML = sorted.map(e => {
-    const d = new Date(e.date + 'T12:00:00');
-    const label = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
-    const badges = [];
-    if (e.maj.dim) badges.push('<span class="badge dim">Dimanche</span>');
-    if (e.maj.ferie) badges.push('<span class="badge ferie">Férié</span>');
-    if (e.maj.nuit) badges.push('<span class="badge nuit">Nuit</span>');
-    badges.push(`<span class="badge">${e.debut}→${e.fin}</span>`);
-    badges.push(`<span class="badge">${e.heures.toFixed(1)}h</span>`);
-
-    return `
-      <div class="entry-card">
-        <button class="del-btn" onclick="deleteEntry(${e.id})">✕</button>
-        <div class="entry-header">
-          <div class="entry-date">${label.charAt(0).toUpperCase() + label.slice(1)}</div>
-          <div class="entry-total">${e.brut.toFixed(2)} €</div>
-        </div>
-        <div class="entry-details">${badges.join('')}</div>
-      </div>`;
+    const d = new Date(e.date+'T12:00:00');
+    const label = d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+    const cap = label.charAt(0).toUpperCase()+label.slice(1);
+    let badges = '';
+    if (e.maj?.dim) badges += '<span class="badge badge-dim">Dimanche</span>';
+    if (e.maj?.ferie) badges += '<span class="badge badge-ferie">Férié</span>';
+    if ((e.hNuit||0) > 0) badges += `<span class="badge badge-nuit">🌙 ${(e.hNuit).toFixed(1)}h nuit</span>`;
+    badges += `<span class="badge badge-default">${e.debut}→${e.fin}</span>`;
+    badges += `<span class="badge badge-default">${e.heures.toFixed(1)}h</span>`;
+    return `<div class="entry-card">
+      <button class="del-btn" onclick="deleteEntry(${e.id})">✕</button>
+      <div class="entry-header">
+        <div style="font-weight:700;font-size:14px;padding-right:24px">${cap}</div>
+        <div style="color:var(--green);font-weight:800;font-size:15px">${e.brut.toFixed(2)} €</div>
+      </div>
+      <div class="badges">${badges}</div>
+    </div>`;
   }).join('');
 }
 
 function deleteEntry(id) {
   if (!confirm('Supprimer cette journée ?')) return;
   entries = entries.filter(e => e.id !== id);
-  localStorage.setItem('theo_entries', JSON.stringify(entries));
-  renderHistorique();
-  renderRecap();
+  localStorage.setItem('theo_v2_entries', JSON.stringify(entries));
+  renderHistorique(); renderRecap();
 }
-
-// ─── RÉCAP MOIS ───
-const MOIS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
 
 function changeMonth(d) {
   recapMonth += d;
-  if (recapMonth > 11) { recapMonth = 0; recapYear++; }
-  if (recapMonth < 0) { recapMonth = 11; recapYear--; }
+  if (recapMonth > 11) { recapMonth=0; recapYear++; }
+  if (recapMonth < 0) { recapMonth=11; recapYear--; }
   renderRecap();
 }
 
 function renderRecap() {
   document.getElementById('recap-month-label').textContent = `${MOIS[recapMonth]} ${recapYear}`;
-
-  const monthEntries = entries.filter(e => {
-    const d = new Date(e.date + 'T12:00:00');
-    return d.getMonth() === recapMonth && d.getFullYear() === recapYear;
+  const me = entries.filter(e => {
+    const d = new Date(e.date+'T12:00:00');
+    return d.getMonth()===recapMonth && d.getFullYear()===recapYear;
   });
 
-  if (monthEntries.length === 0) {
-    document.getElementById('recap-stats').innerHTML = `<div class="stat-card" style="grid-column:span 2; text-align:center; color:var(--muted); font-size:13px;">Pas de données pour ce mois.</div>`;
+  if (!me.length) {
+    document.getElementById('recap-stats').innerHTML = '<div style="grid-column:span 2;text-align:center;padding:30px;color:var(--muted);font-size:13px">Pas de données pour ce mois.</div>';
     document.getElementById('recap-breakdown').innerHTML = '';
     document.getElementById('est-net').textContent = '—';
     return;
   }
 
-  const totalH = monthEntries.reduce((s, e) => s + e.heures, 0);
-  const totalBrut = monthEntries.reduce((s, e) => s + e.brut, 0);
-  const nbJours = monthEntries.length;
+  const totalH = me.reduce((s,e) => s+e.heures, 0);
+  const totalBrut = me.reduce((s,e) => s+e.brut, 0);
+  const totalHNuit = me.reduce((s,e) => s+(e.hNuit||0), 0);
+  const totalHNormales = totalH - totalHNuit;
+  const brutBase = totalH * params.taux;
+  const supNuit = totalHNuit * params.taux * (params.nuit/100);
+  const hDim = me.filter(e=>e.maj?.dim).reduce((s,e)=>s+e.heures,0);
+  const hFerie = me.filter(e=>e.maj?.ferie).reduce((s,e)=>s+e.heures,0);
 
-  // Breakdown par type
-  const brutBase = monthEntries.reduce((s, e) => s + e.heures * params.taux, 0);
-  const majBrut = totalBrut - brutBase;
-
-  const hDim = monthEntries.filter(e => e.maj.dim).reduce((s, e) => s + e.heures, 0);
-  const hFerie = monthEntries.filter(e => e.maj.ferie).reduce((s, e) => s + e.heures, 0);
-  const hNuit = monthEntries.filter(e => e.maj.nuit).reduce((s, e) => s + e.heures, 0);
-
-  const estNet = totalBrut * 0.79;
-  document.getElementById('est-net').textContent = estNet.toFixed(2) + ' €';
+  document.getElementById('est-net').textContent = (totalBrut*0.79).toFixed(2)+' €';
 
   document.getElementById('recap-stats').innerHTML = `
-    <div class="stat-card">
-      <span class="stat-val">${totalH.toFixed(1)}h</span>
-      <span class="stat-label">Heures travaillées</span>
-    </div>
-    <div class="stat-card">
-      <span class="stat-val">${nbJours}</span>
-      <span class="stat-label">Journées</span>
-    </div>
-    <div class="stat-card">
-      <span class="stat-val green">${totalBrut.toFixed(2)} €</span>
-      <span class="stat-label">Brut estimé</span>
-    </div>
-    <div class="stat-card">
-      <span class="stat-val" style="color:var(--blue)">${(totalBrut*0.79).toFixed(2)} €</span>
-      <span class="stat-label">Net estimé</span>
-    </div>
-  `;
+    <div class="stat-card"><div style="font-size:20px;font-weight:800;color:var(--accent)">${totalH.toFixed(1)}h</div><div style="font-size:11px;color:var(--muted);margin-top:4px">Heures travaillées</div></div>
+    <div class="stat-card"><div style="font-size:20px;font-weight:800;color:var(--accent)">${me.length}</div><div style="font-size:11px;color:var(--muted);margin-top:4px">Journées</div></div>
+    <div class="stat-card"><div style="font-size:20px;font-weight:800;color:var(--green)">${totalBrut.toFixed(2)} €</div><div style="font-size:11px;color:var(--muted);margin-top:4px">Brut estimé</div></div>
+    <div class="stat-card"><div style="font-size:20px;font-weight:800;color:var(--blue)">${(totalBrut*0.79).toFixed(2)} €</div><div style="font-size:11px;color:var(--muted);margin-top:4px">Net estimé</div></div>`;
 
-  let breakdown = `
-    <div class="breakdown-row">
-      <span class="label">Heures normales (${totalH.toFixed(1)}h × ${params.taux}€)</span>
-      <span class="amount">${brutBase.toFixed(2)} €</span>
-    </div>`;
-
-  if (hDim > 0) breakdown += `
-    <div class="breakdown-row">
-      <span class="label">Supplément dimanche (${hDim.toFixed(1)}h)</span>
-      <span class="amount" style="color:var(--blue)">+${(hDim * params.taux * params.dim / 100).toFixed(2)} €</span>
-    </div>`;
-
-  if (hFerie > 0) breakdown += `
-    <div class="breakdown-row">
-      <span class="label">Supplément férié (${hFerie.toFixed(1)}h)</span>
-      <span class="amount" style="color:#e0995c">+${(hFerie * params.taux * params.ferie / 100).toFixed(2)} €</span>
-    </div>`;
-
-  if (hNuit > 0) breakdown += `
-    <div class="breakdown-row">
-      <span class="label">Supplément nuit (${hNuit.toFixed(1)}h)</span>
-      <span class="amount" style="color:var(--purple)">+${(hNuit * params.taux * params.nuit / 100).toFixed(2)} €</span>
-    </div>`;
-
-  breakdown += `
-    <div class="breakdown-row">
-      <span class="label" style="font-weight:600; color:var(--text)">TOTAL BRUT</span>
-      <span class="amount accent">${totalBrut.toFixed(2)} €</span>
-    </div>`;
-
-  document.getElementById('recap-breakdown').innerHTML = breakdown;
+  let bd = `
+    <div class="b-row"><span style="color:var(--muted)">Heures normales (${totalHNormales.toFixed(1)}h × ${params.taux}€)</span><span>${(totalHNormales*params.taux).toFixed(2)} €</span></div>`;
+  if (totalHNuit > 0) bd += `<div class="b-row"><span style="color:var(--muted)">Heures de nuit (${totalHNuit.toFixed(1)}h × ${params.taux}€)</span><span>${(totalHNuit*params.taux).toFixed(2)} €</span></div>
+    <div class="b-row"><span style="color:var(--muted)">Supplément nuit +${params.nuit}% sur ${totalHNuit.toFixed(1)}h</span><span style="color:var(--purple)">+${supNuit.toFixed(2)} €</span></div>`;
+  if (hDim > 0) bd += `<div class="b-row"><span style="color:var(--muted)">Supplément dimanche (${hDim.toFixed(1)}h)</span><span style="color:var(--blue)">+${(hDim*params.taux*params.dim/100).toFixed(2)} €</span></div>`;
+  if (hFerie > 0) bd += `<div class="b-row"><span style="color:var(--muted)">Supplément férié (${hFerie.toFixed(1)}h)</span><span style="color:#e0995c">+${(hFerie*params.taux*params.ferie/100).toFixed(2)} €</span></div>`;
+  bd += `<div class="b-row"><span style="font-weight:700">TOTAL BRUT</span><span style="color:var(--accent);font-weight:800;font-size:15px">${totalBrut.toFixed(2)} €</span></div>`;
+  document.getElementById('recap-breakdown').innerHTML = bd;
 }
 
-// ─── RESET ───
 function resetData() {
-  if (!confirm('⚠️ Effacer TOUTES les journées enregistrées ? Cette action est irréversible.')) return;
+  if (!confirm('⚠️ Effacer TOUTES les données ?')) return;
   entries = [];
-  localStorage.setItem('theo_entries', JSON.stringify(entries));
-  renderHistorique();
-  renderRecap();
-  alert('Données effacées.');
+  localStorage.setItem('theo_v2_entries', JSON.stringify(entries));
+  renderHistorique(); renderRecap();
 }
 </script>
 </body>
