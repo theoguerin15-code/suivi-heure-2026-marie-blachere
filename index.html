@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Mes Heures — Théo</title>
+<style>
+  :root {
+    --bg: #0f0e0d; --card: #1a1917; --card2: #222120; --border: #2e2c2a;
+    --accent: #e8a03e; --accent2: #c97b1e; --text: #f0ede8; --muted: #8a857e;
+    --green: #4caf7d; --red: #e05c5c; --blue: #5b9bd5; --purple: #a07dd5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; min-height: 100vh; padding-bottom: 100px; }
+  header { background: linear-gradient(135deg,#1a1409,#1a1917); border-bottom: 1px solid var(--border); padding: 20px 16px 16px; position: sticky; top: 0; z-index: 100; }
+  header h1 { font-size: 20px; font-weight: 800; color: var(--accent); }
+  header p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab { flex: 1; min-width: 80px; padding: 13px 8px; text-align: center; font-size: 11px; font-weight: 700; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; background: none; border: none; border-bottom: 2px solid transparent; }
+  .tab.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
+  .page { display: none; padding: 16px; }
+  .page.active { display: block; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+  .card-title { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  label { font-size: 11px; color: var(--muted); font-weight: 500; }
+  input, select { background: var(--card2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: system-ui, sans-serif; font-size: 14px; padding: 10px 12px; outline: none; width: 100%; -webkit-appearance: none; }
+  input:focus { border-color: var(--accent); }
+  .toggles { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+  .toggle-btn { padding: 8px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--card2); color: var(--muted); font-size: 12px; cursor: pointer; font-weight: 500; }
+  .toggle-btn.on { background: var(--accent); border-color: var(--accent); color: #1a1009; font-weight: 700; }
+  .btn-primary { width: 100%; padding: 14px; background: var(--accent); color: #1a1009; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 4px; }
+  .btn-primary:active { background: var(--accent2); }
+  .preview-box { background: var(--card2); border: 1px dashed var(--border); border-radius: 10px; padding: 12px; margin: 10px 0; }
+  .p-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+  .p-row span:first-child { color: var(--muted); }
+  .nuit-info { background: #231838; border: 1px solid #352a52; border-radius: 8px; padding: 8px 10px; font-size: 11px; color: var(--purple); margin-bottom: 10px; line-height: 1.5; }
+  .entry-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 10px; position: relative; }
+  .entry-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 6px; }
+  .badge { border-radius: 8px; padding: 3px 8px; font-size: 11px; }
+  .badge-default { background: var(--card2); border: 1px solid var(--border); color: var(--muted); }
+  .badge-dim { background: #1a2838; border: 1px solid #2a3d5233; color: var(--blue); }
+  .badge-ferie { background: #382218; border: 1px solid #52382a33; color: #e0995c; }
+  .badge-nuit { background: #231838; border: 1px solid #352a5233; color: var(--purple); }
+  .del-btn { position: absolute; top: 10px; right: 10px; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; padding: 4px; }
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); }
+  .recap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .stat-card { background: var(--card2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; }
+  .month-selector { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .month-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 8px 16px; cursor: pointer; font-size: 18px; }
+  .b-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .b-row:last-child { border-bottom: none; }
+  .net-note { background: #1a2838; border: 1px solid #2a3d52; border-radius: 10px; padding: 10px 12px; font-size: 12px; color: var(--blue); margin-top: 12px; line-height: 1.6; }
+  .param-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .param-row:last-child { border-bottom: none; }
+  .param-input { width: 90px; text-align: right; background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; color: var(--accent); font-size: 14px; font-weight: 700; }
+  .sep { height: 1px; background: var(--border); margin: 6px 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🍞 Mes Heures</h1>
+  <p>Marie Blachère — Boulanger</p>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="showPage('ajouter',this)">Ajouter</button>
+  <button class="tab" onclick="showPage('historique',this)">Historique</button>
+  <button class="tab" onclick="showPage('recap',this)">Récap</button>
+  <button class="tab" onclick="showPage('params',this)">Réglages</button>
+</div>
+
+<!-- AJOUTER -->
+<div class="page active" id="page-ajouter">
+  <div class="card">
+    <div class="card-title">Nouvelle journée</div>
+    <div class="form-row">
+      <div class="form-group"><label>Date</label><input type="date" id="inp-date"></div>
+      <div class="form-group"><label>Heure début</label><input type="time" id="inp-debut" oninput="renderPreview()"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Heure fin</label><input type="time" id="inp-fin" oninput="renderPreview()"></div>
+      <div class="form-group"><label>Pause (min)</label><input type="number" id="inp-pause" value="30" min="0" oninput="renderPreview()"></div>
+    </div>
+    <label style="display:block;margin-bottom:8px;">Majorations manuelles</label>
+    <div class="toggles">
+      <button class="toggle-btn" id="tog-dim" onclick="toggleMaj('dim')">Dimanche +50%</button>
+      <button class="toggle-btn" id="tog-ferie" onclick="toggleMaj('ferie')">Férié +50%</button>
+    </div>
+    <div class="nuit-info">🌙 La majoration nuit (21h→6h) est calculée <strong>automatiquement</strong> selon tes horaires.</div>
+  </div>
+
+  <div class="card" id="preview-card" style="display:none">
+    <div class="card-title">Aperçu de la journée</div>
+    <div class="preview-box" id="preview-content"></div>
+  </div>
+
+  <button class="btn-primary" id="btn-save" onclick="ajouterJournee()">+ Enregistrer cette journée</button>
+</div>
+
+<!-- HISTORIQUE -->
+<div class="page" id="page-historique">
+  <div id="histo-list"></div>
+</div>
+
+<!-- RECAP -->
+<div class="page" id="page-recap">
+  <div class="month-selector">
+    <button class="month-btn" onclick="changeMonth(-1)">‹</button>
+    <span id="recap-month-label" style="font-weight:700;font-size:16px;"></span>
+    <button class="month-btn" onclick="changeMonth(1)">›</button>
+  </div>
+  <div class="net-note" style="margin-top:0;margin-bottom:12px">📅 Période de paie : du <strong>26</strong> au <strong>25</strong> — versée le <strong>29</strong>. Les heures sup de cette période sont payées le <strong>mois suivant</strong>.</div>
+  <div class="recap-grid" id="recap-stats"></div>
+  <div class="card"><div class="card-title">Détail du calcul brut</div><div id="recap-breakdown"></div></div>
+  <div class="card" id="sup-card" style="display:none">
+    <div class="card-title">⏰ Heures supplémentaires (par semaine, &gt;35h)</div>
+    <div id="sup-breakdown"></div>
+    <div class="net-note" style="margin-top:10px;margin-bottom:0">💡 Ces heures sup seront versées sur la <strong>paie du mois suivant</strong>.</div>
+  </div>
+  <div class="net-note">💡 Net ≈ 79% du brut (hors heures sup, versées séparément). Estimation : <strong id="est-net">—</strong></div>
+</div>
+
+<!-- PARAMS -->
+<div class="page" id="page-params">
+  <div class="card">
+    <div class="card-title">Mon contrat</div>
+    <div class="param-row"><div><div>Taux horaire brut (€/h)</div><div style="font-size:11px;color:var(--muted)">Base contrat : 12,34 €</div></div><input class="param-input" type="number" id="p-taux" value="12.34" step="0.01" oninput="saveParams()"></div>
+    <div class="param-row"><div><div>Heures / semaine</div><div style="font-size:11px;color:var(--muted)">Contrat 35h</div></div><input class="param-input" type="number" id="p-hebdo" value="35" step="0.5" oninput="saveParams()"></div>
+    <div class="param-row"><div><div>Majoration dimanche (%)</div></div><input class="param-input" type="number" id="p-dim" value="50" step="5" oninput="saveParams()"></div>
+    <div class="param-row"><div><div>Majoration férié (%)</div></div><input class="param-input" type="number" id="p-ferie" value="50" step="5" oninput="saveParams()"></div>
+    <div class="param-row"><div><div>Majoration nuit (%)</div><div style="font-size:11px;color:var(--muted)">Heures entre 21h et 6h</div></div><input class="param-input" type="number" id="p-nuit" value="25" step="5" oninput="saveParams()"></div>
+    <div class="param-row"><div><div>Heures sup (%)</div></div><input class="param-input" type="number" id="p-sup" value="25" step="5" oninput="saveParams()"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Danger zone</div>
+    <button class="btn-primary" style="background:var(--red);margin-top:0" onclick="resetData()">🗑 Effacer toutes les données</button>
+  </div>
+</div>
+
+<script>
+const MOIS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+let entries = JSON.parse(localStorage.getItem('theo_v2_entries') || '[]');
+let params = JSON.parse(localStorage.getItem('theo_v2_params') || 'null') || { taux:12.34, hebdo:35, dim:50, ferie:50, nuit:25, sup:25 };
+let majOn = { dim:false, ferie:false };
+let recapMonth = new Date().getMonth();
+let recapYear = new Date().getFullYear();
+
+window.onload = () => {
+  document.getElementById('inp-date').value = new Date().toISOString().slice(0,10);
+  loadParams();
+  renderHistorique();
+  renderRecap();
+};
+
+function showPage(p, btn) {
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('active');
+  btn.classList.add('active');
+  if (p === 'recap') renderRecap();
+  if (p === 'historique') renderHistorique();
+}
+
+function loadParams() {
+  document.getElementById('p-taux').value = params.taux;
+  document.getElementById('p-hebdo').value = params.hebdo;
+  document.getElementById('p-dim').value = params.dim;
+  document.getElementById('p-ferie').value = params.ferie;
+  document.getElementById('p-nuit').value = params.nuit;
+  document.getElementById('p-sup').value = params.sup;
+}
+
+function saveParams() {
+  params = {
+    taux: parseFloat(document.getElementById('p-taux').value)||12.34,
+    hebdo: parseFloat(document.getElementById('p-hebdo').value)||35,
+    dim: parseFloat(document.getElementById('p-dim').value)||50,
+    ferie: parseFloat(document.getElementById('p-ferie').value)||50,
+    nuit: parseFloat(document.getElementById('p-nuit').value)||25,
+    sup: parseFloat(document.getElementById('p-sup').value)||25,
+  };
+  localStorage.setItem('theo_v2_params', JSON.stringify(params));
+}
+
+function toggleMaj(key) {
+  majOn[key] = !majOn[key];
+  document.getElementById('tog-' + key).classList.toggle('on', majOn[key]);
+  renderPreview();
+}
+
+// ── CALCUL NUIT AUTOMATIQUE ──
+// Retourne les minutes entre 21h et 6h dans un créneau debut→fin
+function calcMinutesNuit(debutStr, finStr) {
+  const toMin = s => { const [h,m] = s.split(':').map(Number); return h*60+m; };
+  let d = toMin(debutStr);
+  let f = toMin(finStr);
+  if (f <= d) f += 24*60; // passe minuit
+
+  let nuit = 0;
+  // Plage nuit : 0→360 (0h→6h) et 1260→1440 (21h→24h)
+  // On normalise sur 24h glissant
+  for (let t = d; t < f; t++) {
+    const h = t % (24*60);
+    if (h < 360 || h >= 1260) nuit++;
+  }
+  return nuit;
+}
+
+function calcJournee(debutStr, finStr, pauseMin, maj) {
+  const toMin = s => { const [h,m] = s.split(':').map(Number); return h*60+m; };
+  let d = toMin(debutStr), f = toMin(finStr);
+  if (f <= d) f += 24*60;
+  const totalMin = Math.max(0, (f - d) - pauseMin);
+  const heures = totalMin / 60;
+
+  const hNuit = calcMinutesNuit(debutStr, finStr) / 60;
+  const hNormales = Math.max(0, heures - hNuit);
+
+  let brut = hNormales * params.taux;
+  // Heures de nuit : taux de base + majoration nuit
+  brut += hNuit * params.taux * (1 + params.nuit/100);
+  // Majoration dimanche ou férié sur toutes les heures
+  if (maj.dim) brut += heures * params.taux * (params.dim/100);
+  if (maj.ferie) brut += heures * params.taux * (params.ferie/100);
+
+  return { heures, hNuit, hNormales, brut, maj:{...maj} };
+}
+
+function renderPreview() {
+  const debut = document.getElementById('inp-debut').value;
+  const fin = document.getElementById('inp-fin').value;
+  const pause = parseInt(document.getElementById('inp-pause').value)||0;
+  if (!debut || !fin) { document.getElementById('preview-card').style.display='none'; return; }
+
+  const r = calcJournee(debut, fin, pause, majOn);
+  document.getElementById('preview-card').style.display = 'block';
+
+  let html = `
+    <div class="p-row"><span>Total heures travaillées</span><span style="font-weight:600">${r.heures.toFixed(2)}h</span></div>
+    <div class="p-row"><span>dont heures normales</span><span style="font-weight:600">${r.hNormales.toFixed(2)}h</span></div>
+    <div class="p-row"><span>dont heures de nuit (21h-6h)</span><span style="font-weight:600;color:var(--purple)">${r.hNuit.toFixed(2)}h</span></div>`;
+  if (majOn.dim) html += `<div class="p-row"><span>Dimanche +${params.dim}%</span><span style="color:var(--blue)">✓</span></div>`;
+  if (majOn.ferie) html += `<div class="p-row"><span>Férié +${params.ferie}%</span><span style="color:#e0995c">✓</span></div>`;
+  html += `<div class="sep"></div><div class="p-row"><span style="font-weight:600">Brut estimé</span><span style="color:var(--accent);font-weight:800;font-size:16px">${r.brut.toFixed(2)} €</span></div>`;
+  document.getElementById('preview-content').innerHTML = html;
+}
+
+function ajouterJournee() {
+  const date = document.getElementById('inp-date').value;
+  const debut = document.getElementById('inp-debut').value;
+  const fin = document.getElementById('inp-fin').value;
+  const pause = parseInt(document.getElementById('inp-pause').value)||0;
+  if (!date||!debut||!fin) { alert('Remplis la date, début et fin !'); return; }
+
+  const r = calcJournee(debut, fin, pause, majOn);
+  entries.push({ id:Date.now(), date, debut, fin, pause, maj:r.maj, heures:r.heures, hNuit:r.hNuit, brut:r.brut });
+  localStorage.setItem('theo_v2_entries', JSON.stringify(entries));
+
+  majOn = { dim:false, ferie:false };
+  document.getElementById('tog-dim').classList.remove('on');
+  document.getElementById('tog-ferie').classList.remove('on');
+  document.getElementById('inp-debut').value = '';
+  document.getElementById('inp-fin').value = '';
+  document.getElementById('inp-pause').value = '30';
+  document.getElementById('preview-card').style.display = 'none';
+
+  const d = new Date(date); d.setDate(d.getDate()+1);
+  document.getElementById('inp-date').value = d.toISOString().slice(0,10);
+
+  const btn = document.getElementById('btn-save');
+  btn.textContent = '✅ Enregistré !';
+  btn.style.background = 'var(--green)';
+  setTimeout(() => { btn.textContent = '+ Enregistrer cette journée'; btn.style.background = 'var(--accent)'; }, 1800);
+}
+
+function renderHistorique() {
+  const list = document.getElementById('histo-list');
+  if (!entries.length) {
+    list.innerHTML = '<div class="empty-state"><div style="font-size:40px;margin-bottom:12px">📋</div><p>Pas encore de journées enregistrées.</p></div>';
+    return;
+  }
+  const sorted = [...entries].sort((a,b) => b.date.localeCompare(a.date));
+  list.innerHTML = sorted.map(e => {
+    const d = new Date(e.date+'T12:00:00');
+    const label = d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+    const cap = label.charAt(0).toUpperCase()+label.slice(1);
+    let badges = '';
+    if (e.maj?.dim) badges += '<span class="badge badge-dim">Dimanche</span>';
+    if (e.maj?.ferie) badges += '<span class="badge badge-ferie">Férié</span>';
+    if ((e.hNuit||0) > 0) badges += `<span class="badge badge-nuit">🌙 ${(e.hNuit).toFixed(1)}h nuit</span>`;
+    badges += `<span class="badge badge-default">${e.debut}→${e.fin}</span>`;
+    badges += `<span class="badge badge-default">${e.heures.toFixed(1)}h</span>`;
+    return `<div class="entry-card">
+      <button class="del-btn" onclick="deleteEntry(${e.id})">✕</button>
+      <div class="entry-header">
+        <div style="font-weight:700;font-size:14px;padding-right:24px">${cap}</div>
+        <div style="color:var(--green);font-weight:800;font-size:15px">${e.brut.toFixed(2)} €</div>
+      </div>
+      <div class="badges">${badges}</div>
+    </div>`;
+  }).join('');
+}
+
+function deleteEntry(id) {
+  if (!confirm('Supprimer cette journée ?')) return;
+  entries = entries.filter(e => e.id !== id);
+  localStorage.setItem('theo_v2_entries', JSON.stringify(entries));
+  renderHistorique(); renderRecap();
+}
+
+function changeMonth(d) {
+  recapMonth += d;
+  if (recapMonth > 11) { recapMonth=0; recapYear++; }
+  if (recapMonth < 0) { recapMonth=11; recapYear--; }
+  renderRecap();
+}
+
+// Période de paie : du 26 du mois (recapMonth-1) au 25 du mois (recapMonth)
+function getPeriodBounds(month, year) {
+  let startMonth = month - 1, startYear = year;
+  if (startMonth < 0) { startMonth = 11; startYear--; }
+  const start = new Date(startYear, startMonth, 26);
+  const end = new Date(year, month, 25);
+  return { start, end };
+}
+
+// ISO week number
+function getWeekKey(dateStr) {
+  const d = new Date(dateStr+'T12:00:00');
+  const day = (d.getDay()+6)%7; // Monday=0
+  const monday = new Date(d);
+  monday.setDate(d.getDate()-day);
+  return monday.toISOString().slice(0,10);
+}
+
+function renderRecap() {
+  const { start, end } = getPeriodBounds(recapMonth, recapYear);
+  const fmtShort = dt => dt.toLocaleDateString('fr-FR',{day:'numeric',month:'short'});
+  document.getElementById('recap-month-label').textContent = `${fmtShort(start)} → ${fmtShort(end)}`;
+
+  const me = entries.filter(e => {
+    const d = new Date(e.date+'T12:00:00');
+    return d >= start && d <= end;
+  });
+
+  if (!me.length) {
+    document.getElementById('recap-stats').innerHTML = '<div style="grid-column:span 2;text-align:center;padding:30px;color:var(--muted);font-size:13px">Pas de données pour cette période.</div>';
+    document.getElementById('recap-breakdown').innerHTML = '';
+    document.getElementById('sup-card').style.display = 'none';
+    document.getElementById('est-net').textContent = '—';
+    return;
+  }
+
+  const totalH = me.reduce((s,e) => s+e.heures, 0);
+  const totalHNuit = me.reduce((s,e) => s+(e.hNuit||0), 0);
+  const totalHNormales = totalH - totalHNuit;
+  const supNuit = totalHNuit * params.taux * (params.nuit/100);
+  const hDim = me.filter(e=>e.maj?.dim).reduce((s,e)=>s+e.heures,0);
+  const hFerie = me.filter(e=>e.maj?.ferie).reduce((s,e)=>s+e.heures,0);
+
+  // ── Heures sup par semaine ──
+  const weeks = {};
+  me.forEach(e => {
+    const wk = getWeekKey(e.date);
+    weeks[wk] = (weeks[wk]||0) + e.heures;
+  });
+  let totalSupH = 0;
+  const supDetails = [];
+  Object.keys(weeks).sort().forEach(wk => {
+    const h = weeks[wk];
+    if (h > params.hebdo) {
+      const sup = h - params.hebdo;
+      totalSupH += sup;
+      const wkStart = new Date(wk+'T12:00:00');
+      const wkEnd = new Date(wkStart); wkEnd.setDate(wkStart.getDate()+6);
+      supDetails.push({ label: `Semaine du ${fmtShort(wkStart)} au ${fmtShort(wkEnd)}`, totalH: h, sup });
+    }
+  });
+  const totalSupMontant = totalSupH * params.taux * (1 + params.sup/100);
+
+  const totalBrut = me.reduce((s,e) => s+e.brut, 0); // brut "normal" (sans sup)
+
+  document.getElementById('est-net').textContent = (totalBrut*0.79).toFixed(2)+' €';
+
+  document.getElementById('recap-stats').innerHTML = `
+    <div class="stat-card"><div style="font-size:20px;font-weight:800;color:var(--accent)">${totalH.toFixed(1)}h</div><div style="font-size:11px;color:var(--muted);margin-top:4px">Heures travaillées</div></div>
+    <div class="stat-card"><div style="font-size:20px;font-weight:800;color:var(--accent)">${me.length}</div><div style="font-size:11px;color:var(--muted);margin-top:4px">Journées</div></div>
+    <div class="stat-card"><div style="font-size:20px;font-weight:800;color:var(--green)">${totalBrut.toFixed(2)} €</div><div style="font-size:11px;color:var(--muted);margin-top:4px">Brut estimé</div></div>
+    <div class="stat-card"><div style="font-size:20px;font-weight:800;color:var(--blue)">${(totalBrut*0.79).toFixed(2)} €</div><div style="font-size:11px;color:var(--muted);margin-top:4px">Net estimé</div></div>`;
+
+  let bd = `
+    <div class="b-row"><span style="color:var(--muted)">Heures normales (${totalHNormales.toFixed(1)}h × ${params.taux}€)</span><span>${(totalHNormales*params.taux).toFixed(2)} €</span></div>`;
+  if (totalHNuit > 0) bd += `<div class="b-row"><span style="color:var(--muted)">Heures de nuit (${totalHNuit.toFixed(1)}h × ${params.taux}€)</span><span>${(totalHNuit*params.taux).toFixed(2)} €</span></div>
+    <div class="b-row"><span style="color:var(--muted)">Supplément nuit +${params.nuit}% sur ${totalHNuit.toFixed(1)}h</span><span style="color:var(--purple)">+${supNuit.toFixed(2)} €</span></div>`;
+  if (hDim > 0) bd += `<div class="b-row"><span style="color:var(--muted)">Supplément dimanche (${hDim.toFixed(1)}h)</span><span style="color:var(--blue)">+${(hDim*params.taux*params.dim/100).toFixed(2)} €</span></div>`;
+  if (hFerie > 0) bd += `<div class="b-row"><span style="color:var(--muted)">Supplément férié (${hFerie.toFixed(1)}h)</span><span style="color:#e0995c">+${(hFerie*params.taux*params.ferie/100).toFixed(2)} €</span></div>`;
+  bd += `<div class="b-row"><span style="font-weight:700">TOTAL BRUT (hors heures sup)</span><span style="color:var(--accent);font-weight:800;font-size:15px">${totalBrut.toFixed(2)} €</span></div>`;
+  document.getElementById('recap-breakdown').innerHTML = bd;
+
+  // ── Affichage heures sup ──
+  if (supDetails.length) {
+    document.getElementById('sup-card').style.display = 'block';
+    let sb = '';
+    supDetails.forEach(s => {
+      sb += `<div class="b-row"><span style="color:var(--muted)">${s.label} (${s.totalH.toFixed(1)}h, dont ${s.sup.toFixed(1)}h sup)</span><span style="color:var(--green)">+${(s.sup*params.taux*(1+params.sup/100)).toFixed(2)} €</span></div>`;
+    });
+    sb += `<div class="b-row"><span style="font-weight:700">TOTAL HEURES SUP (${totalSupH.toFixed(1)}h × ${params.taux}€ × ${(1+params.sup/100).toFixed(2)})</span><span style="color:var(--accent);font-weight:800;font-size:15px">${totalSupMontant.toFixed(2)} €</span></div>`;
+    document.getElementById('sup-breakdown').innerHTML = sb;
+  } else {
+    document.getElementById('sup-card').style.display = 'none';
+  }
+}
+
+function resetData() {
+  if (!confirm('⚠️ Effacer TOUTES les données ?')) return;
+  entries = [];
+  localStorage.setItem('theo_v2_entries', JSON.stringify(entries));
+  renderHistorique(); renderRecap();
+}
+</script>
+</body>
+</html>
